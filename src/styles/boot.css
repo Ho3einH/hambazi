@@ -1,0 +1,37 @@
+.boot-screen {
+  display: grid;
+  min-height: 100dvh;
+  place-content: center;
+  justify-items: center;
+  gap: 14px;
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 800;
+}
+.boot-screen .brand-mark {
+  width: 42px;
+  height: 42px;
+  font-size: 30px;
+}
+.boot-screen i {
+  width: 45px;
+  height: 3px;
+  margin-top: 4px;
+  overflow: hidden;
+  border-radius: 5px;
+  background: #e5e0ff;
+}
+.boot-screen i::after {
+  display: block;
+  width: 45%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--purple);
+  content: "";
+  animation: boot-progress 1.2s ease-in-out infinite alternate;
+}
+@keyframes boot-progress {
+  to {
+    transform: translateX(125%);
+  }
+}
