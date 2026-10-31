@@ -1,0 +1,6 @@
+.next
+node_modules
+public
+coverage
+tsconfig.tsbuildinfo
+package-lock.json
