@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hambazi
 
-## Getting Started
+Hambazi is a mobile-first sports community PWA for discovering nearby games, hosting a match, and keeping up with players before game day. The interface follows the supplied Hambazi screens: purple actions, green availability, Manrope typography, match filters, venue/map details, profile setup, chat, and account settings.
 
-First, run the development server:
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`. For a production build, run `npm run build` and `npm run start`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Demo account flow
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Guest mode works without an account and stores demo data in this browser.
+- Sign-in calls DummyJSON Auth. Use username `emilys` and password `emilyspass` to try its demo login.
+- Sign-up calls DummyJSON’s simulated add-user endpoint. DummyJSON does not persist created users, so this is not production account storage.
+- Match listings, join requests, hosted games, messages, preferences, and profiles are local demo state. They are not shared with another user or server.
+- Push notifications, support inbox, moderation reports, and payments are not connected in this demo. The location picker stores a city name; device coordinates are used only for a one-time approximate lookup against London, Liverpool, and Bristol.
+- Entry fees are informational only. No payments are collected.
 
-## Learn More
+## Structure
 
-To learn more about Next.js, take a look at the following resources:
+- `app/` contains the Next.js App Router files: `/`, `/offline`, the shared layout, global styles, and manifest.
+- `src/application/` composes the client app and coordinates its local screen state; this is application code, not a Next.js route directory.
+- `src/features/` contains auth/onboarding, discovery/filtering, matches, messaging, profile, and settings screens.
+- `src/components/` contains shared layout and UI components.
+- `src/lib/` contains domain types, seed content, validation schemas, auth calls, the pure app reducer, and local persistence.
+- `src/styles/` contains global design tokens and shared primitive, shell, feedback, overlay, and layout styles. Each feature keeps its own stylesheet beside its components; `app/globals.css` is only the Tailwind entry point.
+- The main app screens are client-side navigation inside `/`; match and profile links use URL hashes. Only `/`, `/offline`, and the manifest are Next.js routes today.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Quality checks
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run lint
+npm run test
+npm run format:check
+npx tsc --noEmit
+npm run build
+```
 
-## Deploy on Vercel
+## PWA behavior
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The manifest includes install icons and standalone display settings. The service worker caches the offline screen, local visual assets, and same-origin Next static assets. It uses network-first page navigation with cached fallbacks and does not cache the cross-origin demo API. Install prompts appear only in browsers that provide the install event.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Production requirements
+
+Replace DummyJSON auth and browser-local match state with a real account, database, authorization, and messaging service before launch. Server-side access control is required for private matches. Venue map tiles are served by OpenStreetMap and need a network connection.
